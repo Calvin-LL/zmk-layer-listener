@@ -27,7 +27,7 @@ manifest:
 
 Layer listeners are specified like this:
 
-```dts
+```c
 / {
     layer_listeners {
         compatible = "zmk,behavior-layer-listeners";
