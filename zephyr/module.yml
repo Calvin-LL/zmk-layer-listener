@@ -1,0 +1,6 @@
+name: zmk-layer-listeners
+build:
+  cmake: .
+  kconfig: Kconfig
+  settings:
+    dts_root: .

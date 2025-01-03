@@ -1,0 +1,5 @@
+DT_COMPAT_ZMK_BEHAVIOR_LAYER_LISTENERS := zmk,behavior-layer-listeners
+
+config ZMK_LAYER_LISTENERS
+    bool
+    default y
