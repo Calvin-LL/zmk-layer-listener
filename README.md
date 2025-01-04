@@ -30,7 +30,7 @@ Layer listeners are specified like this:
 ```c
 / {
     layer_listeners {
-        compatible = "zmk,behavior-layer-listeners";
+        compatible = "zmk,layer-listeners";
 
         // Call &haptic_feedback_in on layer enter, and &haptic_feedback_out on layer leave
         nav_num_feedback {
@@ -47,14 +47,14 @@ Layer listeners are specified like this:
 }
 ```
 
-### Behavior properties
+### Root properties
 
 - `tap-ms`: The time to wait (in milliseconds) between the press and release events of a triggered behavior. Defaults to 5 ms.
 - `wait-ms`: The time to wait (in milliseconds) before triggering the next listener. Defaults to 5 ms.
 
 ### Listener Properties
 
-Each listener is defined as a child node of this behavior.
+Each listener is defined as a child node.
 
 - `layers` (required): A list of layers to which this listener should apply.
 - `bindings` (required): The first behavior is triggered on layer entry, and the second on layer exit. Use `&none` for the other if you need only one.

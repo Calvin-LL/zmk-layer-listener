@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-#define DT_DRV_COMPAT zmk_behavior_layer_listeners
+#define DT_DRV_COMPAT zmk_layer_listeners
 
 #include <zephyr/device.h>
 #include <zephyr/logging/log.h>
@@ -20,8 +20,6 @@
 #include <zmk/keymap.h>
 
 LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
-
-#if DT_HAS_COMPAT_STATUS_OKAY(DT_DRV_COMPAT)
 
 struct layer_listener_cfg {
     struct zmk_behavior_binding enter_binding;
@@ -81,7 +79,5 @@ static int layer_state_listener(const zmk_event_t *eh) {
     return ZMK_EV_EVENT_BUBBLE;
 }
 
-ZMK_LISTENER(behavior_layer_listeners, layer_state_listener);
-ZMK_SUBSCRIPTION(behavior_layer_listeners, zmk_layer_state_changed);
-
-#endif
+ZMK_LISTENER(layer_listeners, layer_state_listener);
+ZMK_SUBSCRIPTION(layer_listeners, zmk_layer_state_changed);
