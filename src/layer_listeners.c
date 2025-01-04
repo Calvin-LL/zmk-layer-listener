@@ -61,6 +61,9 @@ static int layer_state_listener(const zmk_event_t *eh) {
                 struct zmk_behavior_binding_event event = {
                     .position = INT32_MAX,
                     .timestamp = k_uptime_get(),
+#if IS_ENABLED(CONFIG_ZMK_SPLIT)
+                    .source = ZMK_POSITION_STATE_CHANGE_SOURCE_LOCAL,
+#endif
                 };
 
                 if (ev->state) {
