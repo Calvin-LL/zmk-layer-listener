@@ -1,5 +1,10 @@
 DT_COMPAT_ZMK_LAYER_LISTENERS := zmk,layer-listeners
+DT_COMPAT_ZMK_KEYCODE_LISTENERS := zmk,keycode-listeners
 
 config ZMK_LAYER_LISTENERS
     bool
     default $(dt_compat_enabled,$(DT_COMPAT_ZMK_LAYER_LISTENERS))
+
+config ZMK_KEYCODE_LISTENERS
+    bool
+    default $(dt_compat_enabled,$(DT_COMPAT_ZMK_KEYCODE_LISTENERS))
