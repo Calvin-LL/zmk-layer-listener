@@ -1,6 +1,6 @@
-# zmk-layer-listeners
+# zmk-listeners
 
-ZMK module to invoke certain behaviors on layer enter/leave.
+ZMK module to invoke behaviors on certain events.
 
 ## Usage
 
@@ -17,14 +17,14 @@ manifest:
     - name: zmk
       remote: zmkfirmware
       import: app/west.yml
-    - name: zmk-layer-listeners
+    - name: zmk-listeners
       remote: ssbb
       revision: v1
   self:
     path: config
 ```
 
-## Configuration
+## Layer Listeners
 
 Layer listeners are specified like this:
 
