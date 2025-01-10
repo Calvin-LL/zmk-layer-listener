@@ -58,7 +58,7 @@ Layer listeners are specified like this:
 Each listener is defined as a child node.
 
 - `layers` (required): A list of layers to which this listener should apply.
-- `bindings` (required): The first behavior is triggered on layer entry, and the second on layer exit. Use `&none` for the other if you need only one.
+- `bindings` (required): The first behavior is triggered on layer entry, and the second on layer exit. Use `&none` for the other if you need only one. Second binding (layer leave) can be omitted if not needed.
 
 ## References
 
