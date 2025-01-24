@@ -29,7 +29,7 @@ struct layer_listener_cfg {
 };
 
 #define TRANSFORMED_BINDINGS(n)                                                                    \
-    { LISTIFY(DT_PROP_LEN(n, bindings), ZMK_KEYMAP_EXTRACT_BINDING, (, ), n) }
+    {LISTIFY(DT_PROP_LEN(n, bindings), ZMK_KEYMAP_EXTRACT_BINDING, (, ), n)}
 
 #define LAYER_LISTENER_INST(n)                                                                     \
     static struct zmk_behavior_binding                                                             \
@@ -55,14 +55,15 @@ static struct layer_listener_cfg *listeners[] = {DT_INST_FOREACH_CHILD(0, LAYER_
 #define WAIT_MS DT_INST_PROP(0, wait_ms)
 
 static int layer_state_listener(const zmk_event_t *eh) {
-    struct zmk_layer_state_changed *ev = as_zmk_layer_state_changed(eh);
+    zmk_keymap_layer_index_t active_layer_index = zmk_keymap_highest_layer_active();
 
     for (int i = 0; i < LISTENERS_LEN; i++) {
         const struct layer_listener_cfg *cfg = listeners[i];
 
         for (int j = 0; j < cfg->layers_len; j++) {
-            if (ev->layer == cfg->layers[j]) {
-                LOG_DBG("invoking listener %d, layer=%d state=%d", i, ev->layer, ev->state);
+
+            if (active_layer_index == cfg->layers[j]) {
+                LOG_DBG("invoking listener %d, layer=%d", i, active_layer_index);
 
                 struct zmk_behavior_binding_event event = {
                     .position = INT32_MAX,
@@ -72,12 +73,9 @@ static int layer_state_listener(const zmk_event_t *eh) {
 #endif
                 };
 
-                if (ev->state) {
-                    zmk_behavior_queue_add(&event, cfg->bindings[0], true, TAP_MS);
-                    zmk_behavior_queue_add(&event, cfg->bindings[0], false, WAIT_MS);
-                } else if (cfg->bindings_len > 1) {
-                    zmk_behavior_queue_add(&event, cfg->bindings[1], true, TAP_MS);
-                    zmk_behavior_queue_add(&event, cfg->bindings[1], false, WAIT_MS);
+                for (int k = 0; k < cfg->bindings_len; k++) {
+                    zmk_behavior_queue_add(&event, cfg->bindings[k], true, TAP_MS);
+                    zmk_behavior_queue_add(&event, cfg->bindings[k], false, WAIT_MS);
                 }
 
                 break;
