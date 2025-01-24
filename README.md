@@ -1,30 +1,37 @@
-# zmk-listeners
+# zmk-layer-listener
 
-ZMK module to invoke behaviors on certain events.
+ZMK module to invoke behaviors on layer change.
+
+The bindings are triggered based on the highest layer.
+
+Tested on the Glove80.
+
+I use this to have per layer backlit (technically it's RGB underglow) colors.
 
 ## Usage
+
+If you're using the Glove 80, first follow the instructions in https://github.com/moergo-sc/glove80-zmk-config-west.
 
 Add the following entries to `remotes` and `projects` in `config/west.yml`.
 
 ```yaml
 manifest:
   remotes:
-    - name: zmkfirmware
-      url-base: https://github.com/zmkfirmware
-    - name: ssbb
-      url-base: https://github.com/ssbb
+    # ...
+    - name: Calvin-LL
+      url-base: https://github.com/Calvin-LL
   projects:
-    - name: zmk
-      remote: zmkfirmware
-      import: app/west.yml
-    - name: zmk-listeners
-      remote: ssbb
-      revision: v1
+    # ...
+    - name: zmk-layer-listener
+      remote: Calvin-LL
+      revision: main
   self:
     path: config
 ```
 
 ## Layer Listeners
+
+You can also add this to the "Custom Device-tree" section of the [Glove80 Layout Editor](https://my.glove80.com) web app then export the keymap.
 
 Layer listeners are specified like this:
 
@@ -33,19 +40,19 @@ Layer listeners are specified like this:
     layer_listeners {
         compatible = "zmk,layer-listeners";
 
-        // Call &haptic_feedback_in on layer enter, and &haptic_feedback_out on layer leave
-        nav_num_feedback {
-            layers = <NAV NUM>;
-            bindings = <&haptic_feedback_in &haptic_feedback_out>;
+        // white on base layer
+        layer_base {
+            layers = <LAYER_Base>;
+            bindings = <&rgb_ug RGB_ON &rgb_ug RGB_COLOR_HSB(0,0,100)>;
         };
 
-        // Call &reset_nav on NAV layer leave
-        nav_reset {
-            layers = <NAV>;
-            bindings = <&none &reset_nav>;
+        // magenta on lower and magic layers
+        layer_magic {
+            layers = <LAYER_Lower LAYER_Magic>;
+            bindings = <&rgb_ug RGB_ON &rgb_ug RGB_COLOR_HSB(300,100,100)>;
         };
     };
-}
+};
 ```
 
 ### Root properties
@@ -58,39 +65,10 @@ Layer listeners are specified like this:
 Each listener is defined as a child node.
 
 - `layers` (required): A list of layers to which this listener should apply.
-- `bindings` (required): The first behavior is triggered on layer entry, and the second on layer exit. Use `&none` for the other if you need only one. Second binding (layer leave) can be omitted if not needed.
-
-## Keycode Listeners
-
-```c
-/ {
-    keycode_listeners {
-        compatible = "zmk,keycode-listeners";
-
-        // Call &haptic_feedback_key_press on key press, and &haptic_feedback_key_release on key release
-        a_b_feedback {
-            layers = <NAV NUM>;
-            keycodes = <A B>;
-            bindings = <&haptic_feedback_key_press &haptic_feedback_key_release>;
-        };
-    };
-}
-```
-
-### Root properties
-
-- `tap-ms`: The time to wait (in milliseconds) between the press and release events of a triggered behavior. Defaults to 5 ms.
-- `wait-ms`: The time to wait (in milliseconds) before triggering the next listener. Defaults to 5 ms.
-
-### Listener Properties
-
-Each listener is defined as a child node.
-
-- `keycodes` (required): A list of keycodes to which this listener should apply. Implicit modifiers (eg `LG(C)`) are supported.
-- `layers` (optional): A list of layers to which this listener should apply.
-- `bindings` (required): The first behavior is triggered on key press, and the second on key release. Use `&none` for the other if you need only one. Second binding (key release) can be omitted if not needed.
+- `bindings` (required): All the behaviors to trigger when the layer is active.
 
 ## References
 
+- [ssbb/zmk-listeners](https://github.com/ssbb/zmk-listeners/)
 - [elpekenin/zmk-userspace](https://github.com/elpekenin/zmk-userspace) - Same thing with a different implementation and API.
 - [badjeff/zmk-output-behavior-listener](https://github.com/badjeff/zmk-output-behavior-listener) - A more generic and complex listener that supports layers, keycodes, mouse events, etc.
